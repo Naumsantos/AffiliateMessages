@@ -1,0 +1,5 @@
+{
+  "model": "llama3.2:latest",
+  "prompt": "Crie uma frase persuasiva em portugues do Brasil com no maximo 7 palavras e no maximo 1 emoji para este produto: Sandalia feminina",
+  "stream": false
+}

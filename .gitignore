@@ -1,2 +1,20 @@
+# .NET build outputs and IDE files
 **/bin/
 **/obj/
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Local input data and generated output
+*.csv
+messages.txt
+logs.txt
+
+# Temporary/editor files
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db

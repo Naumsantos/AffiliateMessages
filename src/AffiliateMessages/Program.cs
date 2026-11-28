@@ -1,14 +1,20 @@
+using System.Diagnostics;
+using AffiliateMessages.Api;
 using AffiliateMessages.Configuration;
 using AffiliateMessages.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-var argsByName = ParseArguments(args);
+var uiMode = args.Any(argument => string.Equals(argument, "--ui", StringComparison.OrdinalIgnoreCase));
+var configurationArguments = args
+    .Where(argument => !string.Equals(argument, "--ui", StringComparison.OrdinalIgnoreCase))
+    .ToArray();
+var argsByName = ParseArguments(configurationArguments);
 
 var configuration = new ConfigurationBuilder()
     .SetBasePath(AppContext.BaseDirectory)
     .AddJsonFile("appsettings.json", optional: true)
-    .AddCommandLine(args)
+    .AddCommandLine(configurationArguments)
     .Build();
 
 var options = new AppOptions();
@@ -37,6 +43,31 @@ options.OutputFile = outputFile;
 options.LogFile = logFile;
 options.OllamaUrl = ollamaUrl;
 options.OllamaModel = model;
+
+if (uiMode)
+{
+    await using var host = await LocalUiHost.StartAsync(options);
+    logger.LogInformation("Interface local disponível em {Address}", host.Address);
+    try
+    {
+        using var browser = Process.Start(new ProcessStartInfo(host.Address.ToString())
+        {
+            UseShellExecute = true
+        });
+        if (browser is null)
+        {
+            Console.WriteLine($"Abra esta URL no navegador: {host.Address}");
+        }
+    }
+    catch (Exception exception)
+    {
+        logger.LogWarning(exception, "Não foi possível abrir o navegador automaticamente.");
+        Console.WriteLine($"Abra esta URL no navegador: {host.Address}");
+    }
+
+    await host.WaitForShutdownAsync();
+    return 0;
+}
 
 if (!File.Exists(inputFile))
 {

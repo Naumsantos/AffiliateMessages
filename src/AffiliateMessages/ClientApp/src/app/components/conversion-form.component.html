@@ -1,0 +1,55 @@
+<section class="conversion-card" aria-labelledby="conversion-title">
+  <h2 id="conversion-title">Selecione o arquivo CSV</h2>
+  <p class="description">
+    Escolha um arquivo do computador para gerar suas mensagens de divulgação.
+  </p>
+
+  <label class="file-label" for="csv-file">Arquivo CSV</label>
+  <input
+    #fileInput
+    id="csv-file"
+    class="file-input"
+    type="file"
+    accept=".csv,text/csv"
+    [disabled]="isProcessing() || disabled()"
+    (change)="onFileSelected($event)"
+  />
+  <div class="file-picker">
+    <button
+      class="secondary-button"
+      type="button"
+      [disabled]="isProcessing() || disabled()"
+      (click)="fileInput.click()"
+    >
+      Buscar arquivo
+    </button>
+    @if (selectedFile(); as file) {
+      <span class="file-name">{{ file.name }}</span>
+    } @else {
+      <span class="file-name muted">Nenhum arquivo selecionado</span>
+    }
+  </div>
+
+  @if (fileError(); as error) {
+    <p class="error-message" role="alert">{{ error }}</p>
+  }
+
+  <button
+    class="primary-button"
+    type="button"
+    [disabled]="!selectedFile() || isProcessing() || disabled()"
+    (click)="submit()"
+  >
+    {{ isProcessing() ? 'Convertendo…' : 'Iniciar conversão' }}
+  </button>
+
+  @if (isProcessing()) {
+    <p class="status-message" role="status" aria-live="polite">
+      A conversão foi iniciada. Aguarde enquanto processamos o arquivo.
+    </p>
+  }
+
+  @if (requestError(); as error) {
+    <p class="error-message" role="alert">{{ error }}</p>
+  }
+</section>

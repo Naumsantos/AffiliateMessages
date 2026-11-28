@@ -8,8 +8,18 @@
 *.userosscache
 *.sln.docstates
 
+# Angular/Node build outputs and local environment files
+**/node_modules/
+**/dist/
+**/build/
+**/coverage/
+*.log
+.env*
+src/AffiliateMessages/wwwroot/
+
 # Local input data and generated output
 *.csv
+!tests/AffiliateMessages.Tests/Performance/Fixtures/representative-50-products.csv
 messages.txt
 logs.txt
 

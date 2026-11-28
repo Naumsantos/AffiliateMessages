@@ -24,4 +24,8 @@
     <ProjectReference Include="..\..\src\AffiliateMessages\AffiliateMessages.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Performance\Fixtures\representative-50-products.csv" />
+  </ItemGroup>
+
 </Project>

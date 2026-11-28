@@ -1,0 +1,33 @@
+<main class="page-shell">
+  <header class="page-header">
+    <p class="eyebrow">Affiliate Messages</p>
+    <h1>Conversor de mensagens CSV</h1>
+    <p class="intro">
+      Transforme os produtos do seu arquivo em mensagens prontas para compartilhar.
+    </p>
+  </header>
+
+  @if (shutdownAccepted()) {
+    <p class="shutdown-status" role="status">A aplicação está sendo encerrada.</p>
+  } @else {
+    <app-conversion-form
+      [disabled]="shutdownAccepted()"
+      (conversionStarted)="clearResult()"
+      (processingChanged)="setConversionActive($event)"
+      (conversionCompleted)="result.set($event)"
+    />
+
+    @if (result(); as conversionResult) {
+      <app-conversion-results [result]="conversionResult" />
+    }
+
+    <app-shutdown-control
+      [conversionActive]="isConverting()"
+      (shutdownAccepted)="shutdownAccepted.set(true)"
+    />
+  }
+
+  <footer>
+    Seus arquivos são processados localmente neste computador.
+  </footer>
+</main>

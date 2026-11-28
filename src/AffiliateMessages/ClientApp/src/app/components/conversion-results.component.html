@@ -1,0 +1,48 @@
+<section class="results" aria-labelledby="results-title">
+  <div class="result-heading">
+    <div>
+      <p class="eyebrow">Conversão concluída</p>
+      <h2 id="results-title">Mensagens geradas</h2>
+    </div>
+    <span class="message-count">{{ messages().length }}</span>
+  </div>
+
+  @if (result().messages.length === 0) {
+    <p class="notice">Nenhuma mensagem válida foi encontrada no arquivo.</p>
+  }
+
+  @if (result().invalidRowsCount > 0) {
+    <p class="notice">
+      {{ result().invalidRowsCount }} linha(s) inválida(s) foram ignoradas e registradas no log.
+    </p>
+  }
+
+  @if (result().messagesWithoutPhrase > 0) {
+    <p class="notice">
+      {{ result().messagesWithoutPhrase }} mensagem(ns) foram geradas sem frase adicional.
+    </p>
+  }
+
+  <div class="message-list">
+    @for (message of messages(); track message.sequence) {
+      <app-message-card [message]="message" />
+    }
+  </div>
+
+  <div class="output-location">
+    <div>
+      <h3>Arquivo salvo em</h3>
+      <code>{{ result().outputPath }}</code>
+    </div>
+    <button
+      type="button"
+      [disabled]="!result().canOpenOutputFolder || isOpeningFolder()"
+      (click)="openFolder()"
+    >
+      {{ isOpeningFolder() ? 'Abrindo pasta…' : 'Abrir pasta' }}
+    </button>
+  </div>
+  @if (folderError(); as error) {
+    <p class="error-message" role="alert">{{ error }}</p>
+  }
+</section>

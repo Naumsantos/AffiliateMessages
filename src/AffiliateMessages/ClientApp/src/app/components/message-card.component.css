@@ -1,0 +1,68 @@
+:host {
+  display: block;
+}
+
+.message-card {
+  padding: 1rem;
+  border: 1px solid #dfe5e2;
+  border-radius: 0.8rem;
+  background: #fff;
+}
+
+.card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+h3 {
+  margin: 0;
+  color: #173c2e;
+  font-size: 0.95rem;
+}
+
+pre {
+  overflow-x: auto;
+  margin: 0.8rem 0 0;
+  color: #354940;
+  font: inherit;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+button {
+  flex: 0 0 auto;
+  min-height: 2.5rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #bdd7c8;
+  border-radius: 0.55rem;
+  color: #17593e;
+  background: #f2f8f4;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+button:focus-visible {
+  outline: 3px solid #72b69a;
+  outline-offset: 3px;
+}
+
+button:disabled {
+  cursor: wait;
+}
+
+.copy-feedback {
+  margin: 0.7rem 0 0;
+  font-size: 0.88rem;
+}
+
+.success {
+  color: #176a48;
+}
+
+.failure {
+  color: #a52e28;
+}

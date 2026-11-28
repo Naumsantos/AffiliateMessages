@@ -1,0 +1,26 @@
+<article class="message-card" [attr.aria-labelledby]="'message-title-' + message().sequence">
+  <div class="card-heading">
+    <h3 [id]="'message-title-' + message().sequence">Mensagem {{ message().sequence }}</h3>
+    <button
+      type="button"
+      [disabled]="copyState() === 'copying'"
+      (click)="copyMessage()"
+    >
+      @switch (copyState()) {
+        @case ('copying') { Copiando… }
+        @case ('copied') { Copiada }
+        @case ('failed') { Tentar copiar novamente }
+        @default { Copiar mensagem }
+      }
+    </button>
+  </div>
+  <pre>{{ message().text }}</pre>
+  @if (copyState() === 'copied') {
+    <p class="copy-feedback success" role="status">Mensagem copiada.</p>
+  }
+  @if (copyState() === 'failed') {
+    <p class="copy-feedback failure" role="alert">
+      Não foi possível copiar a mensagem. Verifique a permissão da área de transferência.
+    </p>
+  }
+</article>

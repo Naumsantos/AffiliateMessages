@@ -1,0 +1,12 @@
+<section class="shutdown-control" aria-label="Encerramento da aplicação">
+  <button
+    type="button"
+    [disabled]="conversionActive() || isShuttingDown()"
+    (click)="requestShutdown()"
+  >
+    {{ isShuttingDown() ? 'Encerrando aplicação…' : 'Encerrar aplicação' }}
+  </button>
+  @if (shutdownError(); as error) {
+    <p role="alert">{{ error }}</p>
+  }
+</section>

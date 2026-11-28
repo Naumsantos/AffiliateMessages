@@ -24,24 +24,35 @@ public sealed class MessageBatchProcessor
         this.divider = divider;
     }
 
-    public async Task ProcessAsync(string inputFile, string outputFile, CancellationToken cancellationToken = default)
+    public async Task<BatchProcessResult> ProcessAsync(
+        string inputFile,
+        string outputFile,
+        CancellationToken cancellationToken = default)
     {
         var entries = csvReader.Read(inputFile);
         var messages = new List<string>();
+        var invalidRowsCount = 0;
+        var messagesWithoutPhrase = 0;
 
         foreach (var entry in entries)
         {
             if (entry.InvalidReason is not null)
             {
                 invalidLineLogger.Log(entry.LineNumber, entry.InvalidReason);
+                invalidRowsCount++;
                 continue;
             }
 
             var product = entry.Product!;
             var phrase = await ollamaClient.GeneratePhraseAsync(product.Name ?? string.Empty, cancellationToken);
+            if (phrase is null)
+            {
+                messagesWithoutPhrase++;
+            }
             messages.Add(MessageFormatter.Format(product, phrase?.ToUpper()));
         }
 
         messageWriter.Write(outputFile, messages, divider);
+        return new BatchProcessResult(messages, invalidRowsCount, messagesWithoutPhrase);
     }
 }

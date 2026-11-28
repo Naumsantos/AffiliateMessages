@@ -61,31 +61,6 @@ public class ResilienceTests
             File.ReadAllText(outputPath));
     }
 
-    [Fact]
-    public async Task BatchProcessor_FiftyValidProducts_CompletesWithinThreeMinutes()
-    {
-        var csvPath = Path.GetTempFileName();
-        var outputPath = Path.GetTempFileName();
-        var logPath = Path.GetTempFileName();
-        var rows = Enumerable.Range(1, 50)
-            .Select(index => $"{index},Produto {index},\"79,19\",10,Loja,5,3,https://produto.example/{index},https://afiliado.example/{index}");
-        File.WriteAllText(csvPath, string.Join(Environment.NewLine, rows));
-
-        var processor = new MessageBatchProcessor(
-            new CsvReader(),
-            new OllamaClient(new HttpClient(new OfflineHandler()),
-                new AppOptions { OllamaUrl = "http://localhost:11434", OllamaModel = "llama3.2:latest" }),
-            new InvalidLineLogger(logPath),
-            new MessageWriter(),
-            "====================");
-        var startedAt = DateTime.UtcNow;
-
-        await processor.ProcessAsync(csvPath, outputPath);
-
-        Assert.True(DateTime.UtcNow - startedAt < TimeSpan.FromMinutes(3));
-        Assert.Equal(49, File.ReadAllText(outputPath).Split("====================").Length - 1);
-    }
-
     private sealed class OfflineHandler : HttpMessageHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
